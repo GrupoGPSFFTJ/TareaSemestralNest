@@ -20,11 +20,6 @@ $ npm install
 $ npm run start
 ```
 
-## Propuestas a futuro
-
-- Aplicar principios de DevOps
-- Desplegar el proyecto en una plataforma cloud (como GCP o Azure)
-
 ## Autores
 
 - Tomás Yévenes
