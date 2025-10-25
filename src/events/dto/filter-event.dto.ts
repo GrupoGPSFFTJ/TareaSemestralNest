@@ -1,10 +1,5 @@
 import { IsOptional, IsString, IsEnum, IsDateString } from 'class-validator';
-
-export enum EventState {
-  DRAFT = 'draft',
-  PUBLISHED = 'published',
-  CANCELED = 'canceled',
-}
+import { EventState } from '../entities/event.entity';
 
 export class FilterEventDto {
   @IsOptional()

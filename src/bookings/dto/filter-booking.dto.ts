@@ -1,10 +1,6 @@
 import { IsOptional, IsEnum, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
-
-export enum BookingStatus {
-  CONFIRMED = 'confirmed',
-  CANCELED = 'canceled',
-}
+import { BookingStatus } from '../entities/booking.entity';
 
 export class FilterBookingDto {
   @IsOptional()

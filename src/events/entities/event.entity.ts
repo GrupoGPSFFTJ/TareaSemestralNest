@@ -1,6 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { User } from '../../users/entities/user.entity';
+import { Booking } from '../../bookings/entities/booking.entity';
 
-@Entity()
+export enum EventState {
+  DRAFT = 'draft',
+  PUBLISHED = 'published',
+  CANCELED = 'canceled',
+  COMPLETED = 'completed',
+}
+
+@Entity('events')
 export class Event {
   @PrimaryGeneratedColumn()
   id: number;
@@ -11,7 +20,7 @@ export class Event {
   @Column('text')
   description: string;
 
-  @Column()
+  @Column({ type: 'datetime' })
   date: Date;
 
   @Column()
@@ -20,11 +29,31 @@ export class Event {
   @Column()
   capacity: number;
 
-  @Column({ default: 'draft' })
-  state: string; // draft, published, canceled
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  price: number; // Precio de la entrada (0 = gratis)
+
+  @Column({
+    type: 'simple-enum',
+    enum: EventState,
+    default: EventState.DRAFT,
+  })
+  state: EventState;
 
   @Column()
   organizerId: number;
+
+  @ManyToOne(() => User, (user) => user.organizedEvents, { eager: true })
+  @JoinColumn({ name: 'organizerId' })
+  organizer: User;
+
+  @OneToMany(() => Booking, (booking) => booking.event)
+  bookings: Booking[];
+
+  @Column({ nullable: true })
+  category: string; // charla, taller, concierto, etc.
+
+  @Column({ nullable: true })
+  imageUrl: string;
 
   @CreateDateColumn()
   createdAt: Date;
