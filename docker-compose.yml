@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  eventix-api:
+    build: .
+    container_name: eventix-api-container
+    ports:
+      - "3000:3000"
+    environment:
+      - JWT_SECRET=tu-secreto-super-seguro
+    volumes:
+      # ESTO ES CRUCIAL: Persistencia para SQLite
+      # Mapea el archivo local database.sqlite al contenedor
+      - ./database.sqlite:/app/database.sqlite
+    restart: always

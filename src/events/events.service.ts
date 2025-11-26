@@ -165,4 +165,48 @@ export class EventsService {
       order: { date: 'ASC' },
     });
   }
+
+  async getEventStats(eventId: number) {
+    const event = await this.eventsRepository.findOne({
+      where: { id: eventId },
+      relations: ['bookings'],
+    });
+
+    if (!event) {
+      throw new NotFoundException(`Evento con ID ${eventId} no encontrado`);
+    }
+
+    // Filtrar solo reservas confirmadas
+    const confirmedBookings = event.bookings.filter(
+      (booking) => booking.status === BookingStatus.CONFIRMED,
+    );
+
+    // Calcular estadísticas
+    const totalTicketsSold = confirmedBookings.reduce(
+      (sum, booking) => sum + booking.quantity,
+      0,
+    );
+
+    const totalRevenue = confirmedBookings.reduce(
+      (sum, booking) => sum + Number(booking.totalPrice),
+      0,
+    );
+
+    const availableCapacity = event.capacity - totalTicketsSold;
+    const occupancyRate = ((totalTicketsSold / event.capacity) * 100).toFixed(2);
+
+    return {
+      eventId: event.id,
+      eventTitle: event.title,
+      eventDate: event.date,
+      capacity: event.capacity,
+      ticketsSold: totalTicketsSold,
+      availableTickets: availableCapacity,
+      occupancyRate: `${occupancyRate}%`,
+      totalRevenue: totalRevenue,
+      pricePerTicket: event.price,
+      totalBookings: confirmedBookings.length,
+      status: event.state,
+    };
+  }
 }

@@ -57,6 +57,13 @@ export class EventsController {
     return this.eventsService.getAvailableCapacity(+id);
   }
 
+  @Get(':id/stats')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.ORGANIZER)
+  getEventStats(@Param('id') id: string) {
+    return this.eventsService.getEventStats(+id);
+  }
+
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.ORGANIZER)

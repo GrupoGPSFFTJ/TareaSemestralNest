@@ -16,6 +16,8 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { Booking } from './entities/booking.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { GetUser } from '../auth/decorators/get-user.decorator';
+import { User } from '../users/entities/user.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { FilterBookingDto } from './dto/filter-booking.dto';
 
@@ -36,6 +38,15 @@ export class BookingsController {
     @Query() filterDto: FilterBookingDto,
   ): Promise<{ data: Booking[]; total: number; limit: number; offset: number }> {
     return this.bookingsService.findAll(paginationDto, filterDto);
+  }
+
+  @Get('my-bookings')
+  @UseGuards(JwtAuthGuard)
+  async getMyBookings(
+    @GetUser() user: User,
+    @Query() paginationDto: PaginationDto,
+  ) {
+    return this.bookingsService.findAll(paginationDto, { userId: user.id });
   }
 
   @Get('event/:eventId/attendees')
