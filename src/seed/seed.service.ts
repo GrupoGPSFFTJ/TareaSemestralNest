@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { User, UserRole } from '../users/entities/user.entity';
 import { Event, EventState } from '../events/entities/event.entity';
 import { Booking, BookingStatus } from '../bookings/entities/booking.entity';
@@ -24,10 +25,15 @@ export class SeedService implements OnModuleInit {
     const existingUsers = await this.usersRepository.count();
     
     if (existingUsers === 0) {
+      // Hashear contraseñas
+      const adminPass = await bcrypt.hash('admin123', 10);
+      const orgPass = await bcrypt.hash('org123', 10);
+      const userPass = await bcrypt.hash('user123', 10);
+
       // Crear usuarios
       const admin = await this.usersRepository.save({
         email: 'admin@eventix.com',
-        password: 'admin123', // TODO: hashear con bcrypt
+        password: adminPass,
         firstName: 'Admin',
         lastName: 'Sistema',
         role: UserRole.ADMIN,
@@ -36,7 +42,7 @@ export class SeedService implements OnModuleInit {
 
       const organizer1 = await this.usersRepository.save({
         email: 'organizer1@eventix.com',
-        password: 'org123',
+        password: orgPass,
         firstName: 'Carlos',
         lastName: 'Organizer',
         role: UserRole.ORGANIZER,
@@ -45,7 +51,7 @@ export class SeedService implements OnModuleInit {
 
       const organizer2 = await this.usersRepository.save({
         email: 'organizer2@eventix.com',
-        password: 'org123',
+        password: orgPass,
         firstName: 'María',
         lastName: 'Promoter',
         role: UserRole.ORGANIZER,
@@ -54,7 +60,7 @@ export class SeedService implements OnModuleInit {
 
       const user1 = await this.usersRepository.save({
         email: 'user1@example.com',
-        password: 'user123',
+        password: userPass,
         firstName: 'Juan',
         lastName: 'Pérez',
         role: UserRole.USER,
@@ -63,7 +69,7 @@ export class SeedService implements OnModuleInit {
 
       const user2 = await this.usersRepository.save({
         email: 'user2@example.com',
-        password: 'user123',
+        password: userPass,
         firstName: 'Ana',
         lastName: 'García',
         role: UserRole.USER,
@@ -72,7 +78,7 @@ export class SeedService implements OnModuleInit {
 
       const user3 = await this.usersRepository.save({
         email: 'user3@example.com',
-        password: 'user123',
+        password: userPass,
         firstName: 'Pedro',
         lastName: 'Martínez',
         role: UserRole.USER,
