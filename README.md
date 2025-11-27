@@ -140,7 +140,7 @@ Intenta crear un evento protegido.
 
 ---
 
-### 3️⃣ Nuevas Funcionalidades (Valor Agregado) ✨
+### 3️⃣ Nuevas Funcionalidades 
 
 Hemos implementado endpoints especiales solicitados para el contexto del negocio.
 
