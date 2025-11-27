@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException, NotFoundException, BadRequest
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like, Between } from 'typeorm';
 import { Event, EventState } from './entities/event.entity';
+import { BookingStatus } from '../bookings/entities/booking.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { FilterEventDto } from './dto/filter-event.dto';
 import { CreateEventDto } from './dto/create-event.dto';
