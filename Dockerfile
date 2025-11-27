@@ -1,6 +1,9 @@
 # Dockerfile
 FROM node:18-alpine
 
+# Instalar dependencias necesarias para compilar sqlite3
+RUN apk add --no-cache python3 make g++
+
 # Crear directorio de trabajo
 WORKDIR /app
 
