@@ -1,34 +1,65 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { useAuth } from './context/AuthContext'
+import Navbar from './components/Navbar'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import Dashboard from './pages/Dashboard'
+import Events from './pages/Events'
+import EventDetail from './pages/EventDetail'
+import CreateEvent from './pages/CreateEvent'
+import MyBookings from './pages/MyBookings'
+import Users from './pages/Users'
+
+function PrivateRoute({ children }) {
+  const { user, loading } = useAuth()
+  
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Cargando...</div>
+  }
+  
+  return user ? children : <Navigate to="/login" />
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { user } = useAuth()
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div className="min-h-screen bg-gray-100">
+        {user && <Navbar />}
+        
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          
+          <Route path="/dashboard" element={
+            <PrivateRoute><Dashboard /></PrivateRoute>
+          } />
+          
+          <Route path="/events" element={
+            <PrivateRoute><Events /></PrivateRoute>
+          } />
+          
+          <Route path="/events/:id" element={
+            <PrivateRoute><EventDetail /></PrivateRoute>
+          } />
+          
+          <Route path="/create-event" element={
+            <PrivateRoute><CreateEvent /></PrivateRoute>
+          } />
+          
+          <Route path="/my-bookings" element={
+            <PrivateRoute><MyBookings /></PrivateRoute>
+          } />
+          
+          <Route path="/users" element={
+            <PrivateRoute><Users /></PrivateRoute>
+          } />
+          
+          <Route path="/" element={<Navigate to="/dashboard" />} />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </Router>
   )
 }
 
