@@ -50,8 +50,8 @@ export default function CreateEvent() {
 
   if (user?.role !== 'organizer' && user?.role !== 'admin') {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-100 text-red-700 p-4 rounded">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-lg">
           No tienes permisos para crear eventos
         </div>
       </div>
@@ -59,17 +59,21 @@ export default function CreateEvent() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">➕ Crear Nuevo Evento</h1>
-
-        {error && (
-          <div className="bg-red-100 text-red-700 p-4 rounded mb-6">
-            {error}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="container mx-auto px-6 py-12">
+        <div className="max-w-3xl mx-auto">
+          <div className="mb-10">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Crear Nuevo Evento</h1>
+            <p className="text-gray-600">Completa el formulario para publicar tu evento</p>
           </div>
-        )}
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-8 space-y-6">
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg mb-6">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-8 space-y-6">
           <div>
             <label className="block text-gray-700 font-semibold mb-2">Título</label>
             <input
@@ -165,24 +169,24 @@ export default function CreateEvent() {
             </div>
           </div>
 
-          <div className="flex gap-4">
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex-1 bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 transition font-semibold"
-            >
-              {loading ? 'Creando...' : 'Crear Evento'}
-            </button>
-            
-            <button
-              type="button"
-              onClick={() => navigate('/events')}
-              className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
-            >
-              Cancelar
-            </button>
-          </div>
-        </form>
+            <div className="flex gap-4 pt-4">
+              <button
+                type="button"
+                onClick={() => navigate('/events')}
+                className="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 disabled:bg-gray-400 transition font-medium"
+              >
+                {loading ? 'Creando...' : 'Crear Evento'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   )

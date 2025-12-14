@@ -27,10 +27,10 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600">
-      <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="bg-white p-10 rounded-2xl shadow-xl w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-indigo-600 mb-2">🎫 Eventix</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Eventix</h1>
           <p className="text-gray-600">Inicia sesión para continuar</p>
         </div>
 
@@ -68,7 +68,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 transition"
+            className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 disabled:bg-gray-400 transition font-medium"
           >
             {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
           </button>
@@ -77,18 +77,27 @@ export default function Login() {
         <div className="mt-6 text-center">
           <p className="text-gray-600">
             ¿No tienes cuenta?{' '}
-            <Link to="/register" className="text-indigo-600 hover:underline">
+            <Link to="/register" className="text-gray-900 hover:text-gray-700 font-semibold">
               Regístrate aquí
             </Link>
           </p>
         </div>
 
         <div className="mt-8 pt-6 border-t border-gray-200">
-          <p className="text-sm text-gray-500 text-center mb-2">Usuarios de prueba:</p>
-          <div className="space-y-1 text-xs text-gray-600">
-            <p>👑 Admin: admin@eventix.com / admin123</p>
-            <p>📅 Organizador: organizer1@eventix.com / org123</p>
-            <p>👤 Usuario: user1@example.com / user123</p>
+          <p className="text-sm text-gray-600 font-medium text-center mb-3">Usuarios de prueba</p>
+          <div className="space-y-2 text-sm text-gray-600">
+            <div className="flex justify-between px-2">
+              <span>Admin:</span>
+              <span className="text-gray-900 font-mono text-xs">admin@eventix.com / admin123</span>
+            </div>
+            <div className="flex justify-between px-2">
+              <span>Organizador:</span>
+              <span className="text-gray-900 font-mono text-xs">organizer1@eventix.com / org123</span>
+            </div>
+            <div className="flex justify-between px-2">
+              <span>Usuario:</span>
+              <span className="text-gray-900 font-mono text-xs">user1@example.com / user123</span>
+            </div>
           </div>
         </div>
       </div>

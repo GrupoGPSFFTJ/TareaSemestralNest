@@ -38,10 +38,10 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600">
-      <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="bg-white p-10 rounded-2xl shadow-xl w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-indigo-600 mb-2">🎫 Eventix</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Eventix</h1>
           <p className="text-gray-600">Crea tu cuenta</p>
         </div>
 
@@ -104,7 +104,7 @@ export default function Register() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 transition"
+            className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 disabled:bg-gray-400 transition font-medium"
           >
             {loading ? 'Registrando...' : 'Registrarse'}
           </button>
@@ -113,7 +113,7 @@ export default function Register() {
         <div className="mt-6 text-center">
           <p className="text-gray-600">
             ¿Ya tienes cuenta?{' '}
-            <Link to="/login" className="text-indigo-600 hover:underline">
+            <Link to="/login" className="text-gray-900 hover:text-gray-700 font-semibold">
               Inicia sesión aquí
             </Link>
           </p>
