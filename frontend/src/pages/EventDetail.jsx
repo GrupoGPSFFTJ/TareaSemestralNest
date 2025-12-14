@@ -11,6 +11,10 @@ export default function EventDetail() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [bookingSuccess, setBookingSuccess] = useState(false)
+  const [bookings, setBookings] = useState([])
+  const [loadingBookings, setLoadingBookings] = useState(false)
+  const [showManageModal, setShowManageModal] = useState(false)
+  const [actionLoading, setActionLoading] = useState(false)
 
   const translateCategory = (category) => {
     const translations = {
@@ -40,6 +44,12 @@ export default function EventDetail() {
     fetchEvent()
   }, [id])
 
+  useEffect(() => {
+    if ((user?.role === 'admin' || user?.role === 'organizer') && id) {
+      fetchBookings()
+    }
+  }, [id, user])
+
   const fetchEvent = async () => {
     try {
       const response = await api.get(`/events/${id}`)
@@ -68,6 +78,50 @@ export default function EventDetail() {
     } catch (err) {
       console.error('Error creating booking:', err)
       setError(err.response?.data?.message || 'Error al crear reserva')
+    }
+  }
+
+  const fetchBookings = async () => {
+    setLoadingBookings(true)
+    try {
+      const response = await api.get('/bookings', { params: { eventId: id } })
+      // response.data may be { data, total } or an array depending on backend
+      const data = Array.isArray(response.data) ? response.data : response.data.data || []
+      setBookings(data)
+    } catch (err) {
+      console.error('Error fetching bookings for event:', err)
+    } finally {
+      setLoadingBookings(false)
+    }
+  }
+
+  const handleAcceptBooking = async (bookingId) => {
+    if (!confirm('¿Confirmar esta reserva?')) return
+    setActionLoading(true)
+    try {
+      await api.patch(`/bookings/${bookingId}`, { status: 'confirmed' })
+      await fetchBookings()
+      fetchEvent()
+    } catch (err) {
+      console.error('Error confirming booking:', err)
+      alert(err.response?.data?.message || 'Error al confirmar reserva')
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  const handleDeleteBooking = async (bookingId) => {
+    if (!confirm('¿Eliminar esta reserva? Esta acción es irreversible.')) return
+    setActionLoading(true)
+    try {
+      await api.delete(`/bookings/${bookingId}`)
+      await fetchBookings()
+      fetchEvent()
+    } catch (err) {
+      console.error('Error deleting booking:', err)
+      alert(err.response?.data?.message || 'Error al eliminar reserva')
+    } finally {
+      setActionLoading(false)
     }
   }
 
@@ -190,27 +244,36 @@ export default function EventDetail() {
             </div>
           )}
 
-            {/* Delete button for admins/organizers */}
+            {/* Admin/Organizer actions: manage attendees and delete event */}
             {(user?.role === 'admin' || user?.role === 'organizer') && (
-              <div className="ml-4">
+              <div className="ml-4 flex space-x-3">
                 <button
-                  onClick={async () => {
-                    const ok = window.confirm('¿Estás seguro de que quieres eliminar este evento? Esta acción no se puede deshacer.')
-                    if (!ok) return
-
-                    try {
-                      await api.delete(`/events/${id}`)
-                      // After successful deletion (204 No Content), navigate back to events
-                      navigate('/events')
-                    } catch (err) {
-                      console.error('Error deleting event:', err)
-                      setError(err.response?.data?.message || 'Error al eliminar evento')
-                    }
-                  }}
-                  className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition font-medium"
+                  onClick={() => setShowManageModal(true)}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium"
                 >
-                  Eliminar Evento
+                  Gestionar Asistentes
                 </button>
+
+                <div>
+                  <button
+                    onClick={async () => {
+                      const ok = window.confirm('¿Estás seguro de que quieres eliminar este evento? Esta acción no se puede deshacer.')
+                      if (!ok) return
+
+                      try {
+                        await api.delete(`/events/${id}`)
+                        // After successful deletion (204 No Content), navigate back to events
+                        navigate('/events')
+                      } catch (err) {
+                        console.error('Error deleting event:', err)
+                        setError(err.response?.data?.message || 'Error al eliminar evento')
+                      }
+                    }}
+                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition font-medium"
+                  >
+                    Eliminar Evento
+                  </button>
+                </div>
               </div>
             )}
 
@@ -247,6 +310,98 @@ export default function EventDetail() {
           )}
         </div>
       </div>
+
+      {/* Modal: Manage attendees (admin/organizer) */}
+      {showManageModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-auto max-h-[80vh]">
+            <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-gray-900">Gestionar Asistentes</h2>
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => setShowManageModal(false)}
+                  className="text-gray-400 hover:text-gray-600 transition"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6">
+              {loadingBookings ? (
+                <div className="text-center text-gray-600">Cargando asistentes...</div>
+              ) : bookings.length === 0 ? (
+                <div className="text-center text-gray-600">No hay reservas para este evento.</div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                      <thead className="text-xs text-gray-500 border-b border-gray-200">
+                        <tr>
+                          <th className="px-4 py-2">Usuario</th>
+                          <th className="px-4 py-2">Email</th>
+                          <th className="px-4 py-2">Cantidad</th>
+                          <th className="px-4 py-2">Estado</th>
+                          <th className="px-4 py-2 text-right">Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody className="text-sm text-gray-700">
+                        {bookings.map((b) => (
+                          <tr key={b.id} className="border-b border-gray-100 hover:bg-gray-50">
+                            <td className="px-4 py-3">
+                              {b.user?.firstName} {b.user?.lastName}
+                            </td>
+                            <td className="px-4 py-3">{b.user?.email}</td>
+                            <td className="px-4 py-3">{b.quantity}</td>
+                            <td className="px-4 py-3 capitalize">
+                              <span className={
+                                `inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${b.status === 'confirmed' ? 'bg-green-100 text-green-800' : b.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'}`
+                              }>{b.status}</span>
+                            </td>
+                            <td className="px-4 py-3 text-right">
+                              <div className="flex items-center justify-end space-x-2">
+                                {b.status === 'pending' && (
+                                  <button
+                                    onClick={() => handleAcceptBooking(b.id)}
+                                    disabled={actionLoading}
+                                    className="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
+                                  >
+                                    Aceptar
+                                  </button>
+                                )}
+
+                                <button
+                                  onClick={() => handleDeleteBooking(b.id)}
+                                  disabled={actionLoading}
+                                  className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50"
+                                >
+                                  Eliminar
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="p-4 border-t border-gray-100 flex justify-end">
+              <button
+                onClick={() => setShowManageModal(false)}
+                className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }
