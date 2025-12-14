@@ -201,4 +201,4 @@ Este proyecto fue desarrollado como tarea semestral por el equipo mencionado arr
 
 ## 📄 Licencia
 
-Proyecto académico - Universidad [Nombre de tu universidad]
+Proyecto académico - Universidad del Bío-Bío
