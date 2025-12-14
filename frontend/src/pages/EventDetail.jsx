@@ -190,6 +190,30 @@ export default function EventDetail() {
             </div>
           )}
 
+            {/* Delete button for admins/organizers */}
+            {(user?.role === 'admin' || user?.role === 'organizer') && (
+              <div className="ml-4">
+                <button
+                  onClick={async () => {
+                    const ok = window.confirm('¿Estás seguro de que quieres eliminar este evento? Esta acción no se puede deshacer.')
+                    if (!ok) return
+
+                    try {
+                      await api.delete(`/events/${id}`)
+                      // After successful deletion (204 No Content), navigate back to events
+                      navigate('/events')
+                    } catch (err) {
+                      console.error('Error deleting event:', err)
+                      setError(err.response?.data?.message || 'Error al eliminar evento')
+                    }
+                  }}
+                  className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition font-medium"
+                >
+                  Eliminar Evento
+                </button>
+              </div>
+            )}
+
           {bookingSuccess ? (
             <div className="bg-green-50 border border-green-200 text-green-700 p-4 rounded-lg flex items-center">
               <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
