@@ -23,7 +23,10 @@ export class EventsService {
         throw new BadRequestException('La fecha del evento debe ser futura');
       }
 
-      const event = this.eventsRepository.create(createEventDto);
+      const event = this.eventsRepository.create({
+        ...createEventDto,
+        state: createEventDto.state || EventState.PUBLISHED, // Por defecto PUBLISHED
+      });
       return await this.eventsRepository.save(event);
     } catch (error) {
       if (error instanceof BadRequestException) {

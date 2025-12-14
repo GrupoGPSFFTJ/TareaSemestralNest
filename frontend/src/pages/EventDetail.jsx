@@ -12,6 +12,30 @@ export default function EventDetail() {
   const [error, setError] = useState('')
   const [bookingSuccess, setBookingSuccess] = useState(false)
 
+  const translateCategory = (category) => {
+    const translations = {
+      'CONFERENCE': 'conferencia',
+      'CONCERT': 'concierto',
+      'WORKSHOP': 'taller',
+      'SPORTS': 'deportes',
+      'OTHER': 'otro',
+      'charla': 'conferencia'
+    }
+    return translations[category] || category?.toLowerCase() || 'otro'
+  }
+
+  const getCategoryColor = (category) => {
+    const translatedCategory = translateCategory(category)
+    const colors = {
+      'concierto': 'bg-blue-100 text-blue-700',
+      'deportes': 'bg-green-100 text-green-700',
+      'taller': 'bg-purple-100 text-purple-700',
+      'conferencia': 'bg-orange-100 text-orange-700',
+      'otro': 'bg-gray-100 text-gray-700'
+    }
+    return colors[translatedCategory] || 'bg-gray-100 text-gray-700'
+  }
+
   useEffect(() => {
     fetchEvent()
   }, [id])
@@ -78,8 +102,8 @@ export default function EventDetail() {
 
         <div className="bg-white rounded-2xl shadow-sm p-8 md:p-12">
           <div className="mb-6">
-            <span className="inline-block px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium uppercase tracking-wide">
-              {event.category}
+            <span className={`inline-block px-4 py-2 rounded-lg text-sm font-medium uppercase tracking-wide ${getCategoryColor(event.category)}`}>
+              {translateCategory(event.category)}
             </span>
           </div>
           
@@ -139,6 +163,33 @@ export default function EventDetail() {
             </div>
           </div>
 
+          {/* Estado del evento */}
+          {event.state !== 'published' && (user?.role === 'admin' || user?.role === 'organizer') && (
+            <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded-lg mb-4 flex items-center justify-between">
+              <div className="flex items-center">
+                <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>Este evento está en estado: <strong className="uppercase">{event.state}</strong></span>
+              </div>
+              {event.state === 'draft' && (
+                <button
+                  onClick={async () => {
+                    try {
+                      await api.patch(`/events/${id}/publish`)
+                      fetchEvent()
+                    } catch (err) {
+                      setError('Error al publicar evento')
+                    }
+                  }}
+                  className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition font-medium"
+                >
+                  Publicar Evento
+                </button>
+              )}
+            </div>
+          )}
+
           {bookingSuccess ? (
             <div className="bg-green-50 border border-green-200 text-green-700 p-4 rounded-lg flex items-center">
               <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,13 +205,19 @@ export default function EventDetail() {
                 </div>
               )}
               
-              {user?.role === 'user' && (
+              {user?.role === 'user' && event.state === 'published' && (
                 <button
                   onClick={handleBooking}
                   className="w-full md:w-auto bg-gray-900 text-white px-8 py-4 rounded-lg hover:bg-gray-800 transition text-lg font-medium"
                 >
                   Reservar Ahora
                 </button>
+              )}
+
+              {user?.role === 'user' && event.state !== 'published' && (
+                <div className="bg-gray-50 border border-gray-200 text-gray-600 p-4 rounded-lg">
+                  Este evento aún no está disponible para reservas
+                </div>
               )}
             </>
           )}

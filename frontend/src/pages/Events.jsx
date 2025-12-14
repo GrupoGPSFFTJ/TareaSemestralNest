@@ -7,6 +7,30 @@ export default function Events() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
+  const translateCategory = (category) => {
+    const translations = {
+      'CONFERENCE': 'conferencia',
+      'CONCERT': 'concierto',
+      'WORKSHOP': 'taller',
+      'SPORTS': 'deportes',
+      'OTHER': 'otro',
+      'charla': 'conferencia'
+    }
+    return translations[category] || category?.toLowerCase() || 'otro'
+  }
+
+  const getCategoryColor = (category) => {
+    const translatedCategory = translateCategory(category)
+    const colors = {
+      'concierto': 'bg-blue-100 text-blue-700',
+      'deportes': 'bg-green-100 text-green-700',
+      'taller': 'bg-purple-100 text-purple-700',
+      'conferencia': 'bg-orange-100 text-orange-700',
+      'otro': 'bg-gray-100 text-gray-700'
+    }
+    return colors[translatedCategory] || 'bg-gray-100 text-gray-700'
+  }
+
   useEffect(() => {
     fetchEvents()
   }, [])
@@ -63,8 +87,8 @@ export default function Events() {
               >
                 <div className="p-6">
                   <div className="mb-4">
-                    <span className="inline-block px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium uppercase tracking-wide">
-                      {event.category}
+                    <span className={`inline-block px-3 py-1 rounded-lg text-xs font-medium uppercase tracking-wide ${getCategoryColor(event.category)}`}>
+                      {translateCategory(event.category)}
                     </span>
                   </div>
                   

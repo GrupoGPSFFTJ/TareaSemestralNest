@@ -13,7 +13,7 @@ export default function CreateEvent() {
     description: '',
     date: '',
     location: '',
-    category: 'CONFERENCE',
+    category: 'conferencia',
     capacity: '',
     price: ''
   })
@@ -117,13 +117,13 @@ export default function CreateEvent() {
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
               >
-                <option value="CONFERENCE">Conferencia</option>
-                <option value="CONCERT">Concierto</option>
-                <option value="WORKSHOP">Taller</option>
-                <option value="SPORTS">Deportes</option>
-                <option value="OTHER">Otro</option>
+                <option value="conferencia">Conferencia</option>
+                <option value="concierto">Concierto</option>
+                <option value="taller">Taller</option>
+                <option value="deportes">Deportes</option>
+                <option value="otro">Otro</option>
               </select>
             </div>
           </div>

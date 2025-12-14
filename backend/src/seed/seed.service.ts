@@ -96,7 +96,7 @@ export class SeedService implements OnModuleInit {
         price: 0,
         state: EventState.PUBLISHED,
         organizerId: organizer1.id,
-        category: 'charla',
+        category: 'conferencia',
       });
 
       const event2 = await this.eventsRepository.save({
@@ -144,7 +144,7 @@ export class SeedService implements OnModuleInit {
         price: 0,
         state: EventState.DRAFT,
         organizerId: organizer1.id,
-        category: 'charla',
+        category: 'conferencia',
       });
 
       console.log('✅ Eventos creados');
