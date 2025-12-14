@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   preview: {
     allowedHosts: [
-      'https://eventix-manager.onrender.com'
+      'eventix-manager.onrender.com'
     ]
   },
   server: {
