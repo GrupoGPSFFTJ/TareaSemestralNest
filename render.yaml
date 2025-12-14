@@ -1,0 +1,35 @@
+# Ejemplo de render.yaml para desplegar frontend y backend en Render
+# Rellena los valores <...> según tu cuenta y preferencias.
+
+services:
+  - type: web
+    name: eventix-backend
+    env: docker
+    # Si tu repo es público/privado, Render lo detectará al importar. Puedes omitir 'repo' si usas la UI para conectar el repo.
+    branch: main
+    dockerfilePath: backend/Dockerfile
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        value: https://eventix-frontend.onrender.com
+
+  - type: web
+    name: eventix-frontend
+    env: docker
+    branch: main
+    dockerfilePath: frontend/Dockerfile
+    plan: free
+    buildCommand: null
+    envVars:
+      - key: VITE_API_URL
+        value: https://eventix-backend.onrender.com
+    buildArgs:
+      - key: VITE_API_URL
+        value: https://eventix-backend.onrender.com
+
+# Nota:
+# - Ajusta los nombres de los servicios ('eventix-backend', 'eventix-frontend') a los que prefieras.
+# - Reemplaza las URL de ejemplo de FRONTEND_URL / VITE_API_URL por las URL reales que Render asigne al desplegar.
+# - Considera usar una base de datos gestionada (Postgres) para persistencia en producción; SQLite en disco del contenedor no es persistente entre redeploys.
