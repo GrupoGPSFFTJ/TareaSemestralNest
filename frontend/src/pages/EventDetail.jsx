@@ -135,7 +135,7 @@ export default function EventDetail() {
               </div>
             )}
             
-            {user?.role === 'USER' && (
+            {user?.role === 'user' && (
               <button
                 onClick={handleBooking}
                 className="w-full md:w-auto bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition text-lg font-semibold"

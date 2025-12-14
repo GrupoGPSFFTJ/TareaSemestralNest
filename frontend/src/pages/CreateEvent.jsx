@@ -48,7 +48,7 @@ export default function CreateEvent() {
     }
   }
 
-  if (user?.role !== 'ORGANIZER' && user?.role !== 'ADMIN') {
+  if (user?.role !== 'organizer' && user?.role !== 'admin') {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="bg-red-100 text-red-700 p-4 rounded">

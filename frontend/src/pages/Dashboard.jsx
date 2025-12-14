@@ -25,7 +25,7 @@ export default function Dashboard() {
           <p className="text-gray-600">Explora todos los eventos disponibles</p>
         </Link>
 
-        {user?.role === 'USER' && (
+        {user?.role === 'user' && (
           <Link
             to="/my-bookings"
             className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition"
@@ -36,7 +36,7 @@ export default function Dashboard() {
           </Link>
         )}
 
-        {(user?.role === 'ORGANIZER' || user?.role === 'ADMIN') && (
+        {(user?.role === 'organizer' || user?.role === 'admin') && (
           <Link
             to="/create-event"
             className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition"
@@ -47,7 +47,7 @@ export default function Dashboard() {
           </Link>
         )}
 
-        {user?.role === 'ADMIN' && (
+        {user?.role === 'admin' && (
           <Link
             to="/users"
             className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition"

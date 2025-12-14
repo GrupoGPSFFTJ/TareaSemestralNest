@@ -36,9 +36,9 @@ export default function Users() {
 
   const getRoleBadge = (role) => {
     const colors = {
-      ADMIN: 'bg-purple-100 text-purple-800',
-      ORGANIZER: 'bg-blue-100 text-blue-800',
-      USER: 'bg-green-100 text-green-800'
+      admin: 'bg-purple-100 text-purple-800',
+      organizer: 'bg-blue-100 text-blue-800',
+      user: 'bg-green-100 text-green-800'
     }
     return colors[role] || 'bg-gray-100 text-gray-800'
   }
