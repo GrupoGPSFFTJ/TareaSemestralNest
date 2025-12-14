@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
+import PropTypes from 'prop-types'
 import Navbar from './components/Navbar'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -16,6 +17,10 @@ function PrivateRoute({ children }) {
   console.log('PrivateRoute - User:', user)
   
   return user ? children : <Navigate to="/login" />
+}
+
+PrivateRoute.propTypes = {
+  children: PropTypes.node.isRequired,
 }
 
 function App() {
