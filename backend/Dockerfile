@@ -6,15 +6,13 @@ RUN apk add --no-cache python3 make g++
 
 # Crear directorio de trabajo
 WORKDIR /app
-
-# Copiar archivos de dependencias
-COPY package*.json ./
+# Copiar el código fuente (incluye package.json)
+# Copiamos todo antes de instalar para que funcione tanto si el build context
+# es la raíz del repo como si es la carpeta backend.
+COPY . .
 
 # Instalar dependencias
-RUN npm install
-
-# Copiar el código fuente
-COPY . .
+RUN npm install --production --no-audit --prefer-offline || npm install
 
 # Crear directorio para la base de datos con permisos
 RUN mkdir -p /app/data && chmod 777 /app/data
