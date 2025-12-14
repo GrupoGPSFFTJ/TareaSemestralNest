@@ -11,11 +11,9 @@ import MyBookings from './pages/MyBookings'
 import Users from './pages/Users'
 
 function PrivateRoute({ children }) {
-  const { user, loading } = useAuth()
+  const { user } = useAuth()
   
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Cargando...</div>
-  }
+  console.log('PrivateRoute - User:', user)
   
   return user ? children : <Navigate to="/login" />
 }

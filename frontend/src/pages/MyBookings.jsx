@@ -13,8 +13,11 @@ export default function MyBookings() {
   const fetchBookings = async () => {
     try {
       const response = await api.get('/bookings/my-bookings')
-      setBookings(response.data)
+      console.log('Bookings response:', response.data)
+      // El backend devuelve { data: Booking[], total, limit, offset }
+      setBookings(response.data.data || [])
     } catch (err) {
+      console.error('Error fetching bookings:', err)
       setError('Error al cargar reservas')
     } finally {
       setLoading(false)

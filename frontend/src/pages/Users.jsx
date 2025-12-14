@@ -13,8 +13,10 @@ export default function Users() {
   const fetchUsers = async () => {
     try {
       const response = await api.get('/users')
+      console.log('Users response:', response.data)
       setUsers(response.data)
     } catch (err) {
+      console.error('Error fetching users:', err)
       setError('Error al cargar usuarios')
     } finally {
       setLoading(false)

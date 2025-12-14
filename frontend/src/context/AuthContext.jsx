@@ -20,13 +20,17 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
+      console.log('Intentando login con:', email)
       const response = await api.post('/auth/login', { email, password })
+      console.log('Respuesta login:', response.data)
       const { access_token } = response.data
       
       localStorage.setItem('token', access_token)
       api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`
       
+      console.log('Obteniendo perfil...')
       const profileResponse = await api.get('/auth/profile')
+      console.log('Respuesta perfil:', profileResponse.data)
       const userData = profileResponse.data
       
       localStorage.setItem('user', JSON.stringify(userData))
@@ -34,6 +38,7 @@ export function AuthProvider({ children }) {
       
       return { success: true }
     } catch (error) {
+      console.error('Error en login:', error)
       return { success: false, error: error.response?.data?.message || 'Error al iniciar sesión' }
     }
   }

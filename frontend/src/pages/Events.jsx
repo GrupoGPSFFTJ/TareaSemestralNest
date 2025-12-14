@@ -13,9 +13,12 @@ export default function Events() {
 
   const fetchEvents = async () => {
     try {
+      console.log('Fetching events...')
       const response = await api.get('/events')
-      setEvents(response.data)
+      console.log('Events response:', response.data)
+      setEvents(response.data.data || [])
     } catch (err) {
+      console.error('Error fetching events:', err)
       setError('Error al cargar eventos')
     } finally {
       setLoading(false)

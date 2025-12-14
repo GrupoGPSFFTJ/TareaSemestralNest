@@ -31,14 +31,17 @@ export default function CreateEvent() {
     setLoading(true)
 
     try {
+      console.log('Creating event as user:', user.id)
       await api.post('/events', {
         ...formData,
+        organizerId: user.id,
         capacity: parseInt(formData.capacity),
         price: parseFloat(formData.price),
         date: new Date(formData.date).toISOString()
       })
       navigate('/events')
     } catch (err) {
+      console.error('Error creating event:', err)
       setError(err.response?.data?.message || 'Error al crear evento')
     } finally {
       setLoading(false)

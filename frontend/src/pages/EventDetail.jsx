@@ -19,8 +19,10 @@ export default function EventDetail() {
   const fetchEvent = async () => {
     try {
       const response = await api.get(`/events/${id}`)
+      console.log('Event detail response:', response.data)
       setEvent(response.data)
     } catch (err) {
+      console.error('Error fetching event:', err)
       setError('Error al cargar evento')
     } finally {
       setLoading(false)
@@ -29,15 +31,18 @@ export default function EventDetail() {
 
   const handleBooking = async () => {
     try {
+      console.log('Creating booking for event:', id, 'user:', user.id)
       await api.post('/bookings', {
+        userId: user.id,
         eventId: parseInt(id),
-        numberOfPeople: 1
+        quantity: 1
       })
       setBookingSuccess(true)
       setTimeout(() => {
         navigate('/my-bookings')
       }, 2000)
     } catch (err) {
+      console.error('Error creating booking:', err)
       setError(err.response?.data?.message || 'Error al crear reserva')
     }
   }
